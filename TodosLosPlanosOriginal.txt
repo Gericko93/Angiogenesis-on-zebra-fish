@@ -1,0 +1,49 @@
+for (j = 1 ; j <= 10; j++) {
+  numImages = 39;
+  for (i = 1; i <= numImages; i++) {
+    // Define el camino de la siguiente imagen
+    if (i < 10) {
+      path = "C:/Users/gerpo/OneDrive/Desktop/Planos/" + j + "/prueba000" + i + ".tif";
+      if (i == 9) {
+        path2 = "C:/Users/gerpo/OneDrive/Desktop/Planos/" + j + "/prueba0010.tif";
+      } else {
+        path2 = "C:/Users/gerpo/OneDrive/Desktop/Planos/" + j + "/prueba000" + (i+1) + ".tif";
+      }
+    } else if (i < numImages) {
+      path = "C:/Users/gerpo/OneDrive/Desktop/Planos/" + j + "/prueba00" + i + ".tif";
+      path2 = "C:/Users/gerpo/OneDrive/Desktop/Planos/" + j + "/prueba00" + (i+1) + ".tif";
+    } else {
+      break;
+    }
+    open(path);
+    img1 = getTitle();
+    open(path2);
+    img2 = getTitle();
+    imageCalculator("Subtract create", img1,img2);
+    img3 = getTitle();
+    selectWindow(img3);
+    saveAs("Tiff", "C:/Users/gerpo/OneDrive/Desktop/Asereje2/plano" + j + "/result " + i);
+    close();
+    close();
+    selectWindow(img1);
+    close();	
+  }
+  File.openSequence("C:/Users/gerpo/OneDrive/Desktop/Asereje2/plano" + j);
+  selectWindow("plano" + j);
+  //run("Brightness/Contrast...");
+  run("Enhance Contrast", "saturated=0.35");
+  run("Apply LUT", "stack");
+  run("Z Project...", "projection=[Average Intensity]");
+  run("8-bit");
+  setAutoThreshold("Default dark no-reset");
+  //run("Threshold...");
+  //setThreshold(220, 255);
+  setOption("BlackBackground", true);
+  run("Convert to Mask");
+  run("Erode");
+  run("Gaussian Blur...", "sigma=4");
+  run("Convert to Mask");
+  saveAs("Tiff", "C:/Users/gerpo/OneDrive/Desktop/Asereje3/AVG_Asereje2_plano" + j + ".tif");
+  selectWindow("plano" + j);
+  close();
+}
